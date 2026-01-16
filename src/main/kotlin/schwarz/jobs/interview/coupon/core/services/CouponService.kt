@@ -1,0 +1,52 @@
+package schwarz.jobs.interview.coupon.core.services
+
+import org.springframework.stereotype.Service
+import schwarz.jobs.interview.coupon.core.domain.Coupon
+import schwarz.jobs.interview.coupon.core.repository.CouponRepository
+import schwarz.jobs.interview.coupon.core.services.model.Basket
+import schwarz.jobs.interview.coupon.web.dto.CouponDto
+import schwarz.jobs.interview.coupon.web.dto.CouponRequestDto
+import java.util.Optional
+
+@Service
+class CouponService(
+    private val couponRepository: CouponRepository
+) {
+
+    fun getCoupon(code: String) : Optional<Coupon> = couponRepository.findByCode(code)
+
+    fun apply(basket: Basket, code: String): Basket? {
+
+        val coupon = getCoupon(code) ?: error("No coupon found")
+
+        if (basket.value.toDouble() >= 0) {
+
+            if (basket.value.toDouble() > 0) {
+                basket.applyDiscount(coupon.get().discount)
+            } else if (basket.value.toDouble() == 0.0) {
+                return basket
+            }
+        } else {
+            println("DEBUG: TRIED TO APPLY NEGATIVE DISCOUNT!")
+            throw RuntimeException("Can't apply negative discounts")
+        }
+        return basket
+    }
+
+    fun createCoupon(couponDto: CouponDto): Coupon {
+
+        return Coupon(
+            code = couponDto.code,
+            discount = couponDto.discount,
+            minBasketValue = couponDto.minBasketValue,
+        )
+    }
+
+    fun getCoupons(couponRequestDto: CouponRequestDto): MutableList<Coupon> {
+
+        val foundCoupons = mutableListOf<Coupon>()
+        couponRequestDto.codes.forEach{ couponRepository.findByCode(it)!!.let { coupon -> foundCoupons.add(coupon.get()) } }
+        return foundCoupons
+    }
+
+}
