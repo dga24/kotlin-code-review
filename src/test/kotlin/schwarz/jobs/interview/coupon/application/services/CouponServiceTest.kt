@@ -93,7 +93,7 @@ class CouponServiceTest {
 
         every { basketRepository.findById("1") } returns basket
         every { couponRepository.findByCode("TEST1") } returns coupon
-        every { basketRepository.save(any()) } returns basket
+        every { basketRepository.update(any()) } returns basket
 
         val result = couponService.apply(command)
 
@@ -101,7 +101,7 @@ class CouponServiceTest {
         assertEquals("TEST1", result.appliedCoupons()[0].code)
         verify { basketRepository.findById("1") }
         verify { couponRepository.findByCode("TEST1") }
-        verify { basketRepository.save(basket) }
+        verify { basketRepository.update(basket) }
     }
 
     @Test
@@ -131,6 +131,6 @@ class CouponServiceTest {
         }
 
         assertEquals("Coupon EXPENSIVE cannot be applied to this basket", exception.message)
-        verify(exactly = 0) { basketRepository.save(any()) }
+        verify(exactly = 0) { basketRepository.update(any()) }
     }
 }

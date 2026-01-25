@@ -29,7 +29,7 @@ class BasketRepositoryAdapter(
         )
     }
 
-    override fun save(basket: Basket): Basket {
+    override fun update(basket: Basket): Basket {
         val basketEntity = basketRepositoryJpa.findById(basket.id.value)
             .orElseThrow { NoSuchElementException("Basket ${basket.id.value} not found") }
 

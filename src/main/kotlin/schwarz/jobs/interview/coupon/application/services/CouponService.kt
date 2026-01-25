@@ -35,7 +35,7 @@ class CouponService(
         val coupon = get(code = command.code)
 
         basket.applyDiscount(coupon)
-        basketRepository.save(basket = basket)
+        basketRepository.update(basket = basket)
         return basket
     }
 

@@ -6,5 +6,5 @@ interface BasketRepository {
 
     fun findById(id: String): Basket?
 
-    fun save(basket: Basket): Basket
+    fun update(basket: Basket): Basket
 }
