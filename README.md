@@ -4,9 +4,9 @@
 
 ### Prerequisites
 
-- JDK 1.8 or later
-- Gradle 7.5
-- Spring Boot 2.7.x
+- JDK 17 or later
+- Gradle 8.5
+- Spring Boot 3.5.x
 
 To get started with this Kotlin Spring Boot project, follow these steps:
 
@@ -41,7 +41,7 @@ To get started with this Kotlin Spring Boot project, follow these steps:
 
 **Documentation:**
 
-- The `apply` method is a GET endpoint that accepts an `CouponDto` object in the request body. It applies the currently active promotions and coupons from the request to the requested basket. If the basket is not found or the application is successful, appropriate HTTP responses are returned.
+- The `apply` method is a POST endpoint that accepts an `CouponDto` object in the request body. It applies the currently active promotions and coupons from the request to the requested basket. If the basket is not found or the application is successful, appropriate HTTP responses are returned.
 
 - The `create` method is a POST endpoint that accepts a `ApplicationRequestDto` object in the request body. It creates a new coupon using the provided data.
 

@@ -1,19 +1,20 @@
-spring:
-  main:
-    web-application-type: reactive
+server:
+  port: ${SERVER_PORT:8080}
+
   datasource:
-    url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    url: ${DB_URL:jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    driverClassName: ${DB_DRIVER:org.h2.Driver}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:password}
   jpa:
     database-platform: "org.hibernate.dialect.H2Dialect"
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:false}
   h2:
     console:
-      enabled: true
-      path: /h2-console
+      enabled: ${H2_CONSOLE_ENABLED:true}
+      path: ${H2_CONSOLE_PATH:/h2-console}
       settings:
         trace: false
         web-allow-others: false
@@ -25,7 +26,7 @@ spring:
 spring-doc:
   pathsToMatch: /api/**
   show-actuator: true
-  swagger-ui.enabled: true
+  swagger-ui.enabled: ${SWAGGER_ENABLED:true}
 
   api-docs:
-    path: /api-docs
+    path: ${API_DOCS_PATH:/api-docs}

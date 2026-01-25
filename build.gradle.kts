@@ -6,6 +6,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.5"
     kotlin("jvm") version "2.2.20"
     kotlin("plugin.spring") version "2.2.20"
+    kotlin("plugin.jpa") version "2.2.20"
 }
 
 group = "schwarz.jobs.interview"
@@ -37,6 +38,7 @@ dependencies {
         exclude(module = "mockito-core")
     }
     testImplementation("com.ninja-squad:springmockk:4.0.2")
+    implementation(kotlin("stdlib"))
 }
 
 tasks.withType<KotlinCompile> {
