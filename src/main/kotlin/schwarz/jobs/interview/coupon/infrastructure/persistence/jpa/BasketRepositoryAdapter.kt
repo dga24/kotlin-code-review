@@ -1,6 +1,5 @@
 package schwarz.jobs.interview.coupon.infrastructure.persistence.jpa
 
-import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import schwarz.jobs.interview.coupon.application.port.out.BasketRepository
 import schwarz.jobs.interview.coupon.domain.model.Basket
@@ -39,12 +38,10 @@ class BasketRepositoryAdapter(
         val couponEntitiesMap = couponRepositoryJpa.findByCodeIn(couponCodes)
             .associateBy { it.code }
 
-        // Remove coupons that are no longer in the basket
         basketEntity.appliedCoupons.removeIf { existing ->
             basket.appliedCoupons().none { it.code == existing.coupon.code }
         }
 
-        // Add new coupons that aren't already in the basket
         basket.appliedCoupons().forEach { coupon ->
             val alreadyExists = basketEntity.appliedCoupons.any { it.coupon.code == coupon.code }
             if (!alreadyExists) {
