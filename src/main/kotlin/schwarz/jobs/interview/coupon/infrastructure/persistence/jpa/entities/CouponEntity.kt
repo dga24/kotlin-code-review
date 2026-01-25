@@ -10,18 +10,28 @@ import java.math.BigDecimal
 
 @Entity
 @Table(name = "coupon")
-data class CouponEntity(
+class CouponEntity(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "code")
+    @Column(name = "code", nullable = false, unique = true)
     val code: String,
 
-    @Column(name = "discount", precision = 10, scale = 2)
+    @Column(precision = 10, scale = 2)
     val discount: BigDecimal,
 
-    @Column(name = "min_basket_value", precision = 10, scale = 2)
-    val minBasketValue: BigDecimal,
-)
+    @Column(name = "min_basket_value", precision = 10, scale = 2, nullable = false)
+    val minBasketValue: BigDecimal
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CouponEntity) return false
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: 0
+
+    override fun toString(): String = "CouponEntity(id=$id, code='$code')"
+}

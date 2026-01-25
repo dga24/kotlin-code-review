@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import schwarz.jobs.interview.coupon.application.command.ApplyCouponCommand
 import schwarz.jobs.interview.coupon.application.command.CreateCouponCommand
+import schwarz.jobs.interview.coupon.application.port.out.BasketRepository
 import java.math.BigDecimal
 
 @SpringBootTest
@@ -17,6 +18,9 @@ class CouponServiceIntegrationTest {
 
     @Autowired
     private lateinit var couponService: CouponService
+
+    @Autowired
+    private lateinit var basketRepository: BasketRepository
 
     @Test
     fun `should get existing coupon by code`() {
@@ -76,5 +80,32 @@ class CouponServiceIntegrationTest {
         assertEquals(1, basket.appliedCoupons().size)
         assertEquals("TEST1", basket.appliedCoupons()[0].code)
         assertEquals(BigDecimal("65.00"), basket.priceAfterCoupons())
+    }
+
+    @Test
+    fun `should apply multiple coupons to basket`() {
+        val command = ApplyCouponCommand(
+            basketId = "1",
+            code = "TEST1"
+        )
+
+        val basket = couponService.apply(command)
+
+        assertNotNull(basket)
+        assertEquals(1, basket.appliedCoupons().size)
+        assertEquals("TEST1", basket.appliedCoupons()[0].code)
+        assertEquals(BigDecimal("65.00"), basket.priceAfterCoupons())
+        assertEquals(BigDecimal("65.00"), basketRepository.findById("1")!!.priceAfterCoupons())
+
+        val command2 = ApplyCouponCommand(
+            basketId = "1",
+            code = "TEST4"
+        )
+
+        val basketAfterSecondCoupon = couponService.apply(command2)
+        assertEquals(2, basketAfterSecondCoupon.appliedCoupons().size)
+        assertEquals("TEST4", basketAfterSecondCoupon.appliedCoupons()[1].code)
+        assertEquals(BigDecimal("60.00"), basketAfterSecondCoupon.priceAfterCoupons())
+        assertEquals(BigDecimal("60.00"), basketRepository.findById("1")!!.priceAfterCoupons())
     }
 }

@@ -1,5 +1,6 @@
 package schwarz.jobs.interview.coupon.infrastructure.persistence.jpa
 
+import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import schwarz.jobs.interview.coupon.application.port.out.BasketRepository
 import schwarz.jobs.interview.coupon.domain.model.Basket
@@ -19,11 +20,11 @@ class BasketRepositoryAdapter(
         return Basket.rehydrate(
             id = BasketId(value = entity.id!!),
             amount = entity.amount,
-            appliedCoupons = entity.appliedCoupons.map { coupon ->
+            appliedCoupons = entity.appliedCoupons.map { basketCoupon ->
                 Coupon.rehydrate(
-                    code = coupon.couponEntity.code,
-                    discount = coupon.discountApplied,
-                    minBasketValue = coupon.couponEntity.minBasketValue,
+                    code = basketCoupon.coupon.code,
+                    discount = basketCoupon.discountApplied,
+                    minBasketValue = basketCoupon.coupon.minBasketValue,
                 )
             },
         )
@@ -38,17 +39,25 @@ class BasketRepositoryAdapter(
         val couponEntitiesMap = couponRepositoryJpa.findByCodeIn(couponCodes)
             .associateBy { it.code }
 
-        basketEntity.appliedCoupons.clear()
+        // Remove coupons that are no longer in the basket
+        basketEntity.appliedCoupons.removeIf { existing ->
+            basket.appliedCoupons().none { it.code == existing.coupon.code }
+        }
 
+        // Add new coupons that aren't already in the basket
         basket.appliedCoupons().forEach { coupon ->
-            val couponEntity = couponEntitiesMap[coupon.code]
+            val alreadyExists = basketEntity.appliedCoupons.any { it.coupon.code == coupon.code }
+            if (!alreadyExists) {
+                val couponEntity = couponEntitiesMap[coupon.code]
+                    ?: throw NoSuchElementException("Coupon ${coupon.code} not found")
 
-            val basketCouponEntity = BasketCouponEntity(
-                basketEntity = basketEntity,
-                couponEntity = couponEntity!!,
-                discountApplied = coupon.discount
-            )
-            basketEntity.appliedCoupons.add(basketCouponEntity)
+                val basketCouponEntity = BasketCouponEntity(
+                    basket = basketEntity,
+                    coupon = couponEntity,
+                    discountApplied = coupon.discount
+                )
+                basketEntity.appliedCoupons.add(basketCouponEntity)
+            }
         }
 
         val savedEntity = basketRepositoryJpa.save(basketEntity)
@@ -58,9 +67,9 @@ class BasketRepositoryAdapter(
             amount = savedEntity.amount,
             appliedCoupons = savedEntity.appliedCoupons.map { basketCoupon ->
                 Coupon.rehydrate(
-                    code = basketCoupon.couponEntity.code,
+                    code = basketCoupon.coupon.code,
                     discount = basketCoupon.discountApplied,
-                    minBasketValue = basketCoupon.couponEntity.minBasketValue,
+                    minBasketValue = basketCoupon.coupon.minBasketValue,
                 )
             },
         )
