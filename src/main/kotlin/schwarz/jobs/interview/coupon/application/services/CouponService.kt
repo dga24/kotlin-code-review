@@ -30,7 +30,7 @@ class CouponService(
 
     override fun apply(command: ApplyCouponCommand): Basket {
         val basket = basketRepository.findById(id = command.basketId)
-            ?: throw NoSuchElementException("Coupon code ${command.basketId} not found")
+            ?: throw NoSuchElementException("Basket ${command.basketId} not found")
 
         val coupon = get(code = command.code)
 

@@ -114,7 +114,7 @@ class CouponServiceTest {
             couponService.apply(command)
         }
 
-        assertEquals("Coupon code 999 not found", exception.message)
+        assertEquals("Basket 999 not found", exception.message)
     }
 
     @Test
