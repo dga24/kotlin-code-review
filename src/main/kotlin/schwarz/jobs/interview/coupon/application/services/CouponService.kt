@@ -38,10 +38,11 @@ class CouponService(
 
         basket.applyDiscount(coupon)
 
+        val appliedCoupon = basket.appliedCoupons().last()
         basketCouponRepository.save(
             basketId = command.basketId,
-            couponCode = command.code,
-            discount = coupon.discount
+            couponCode = appliedCoupon.code,
+            discount = appliedCoupon.discount
         )
 
         return basket
