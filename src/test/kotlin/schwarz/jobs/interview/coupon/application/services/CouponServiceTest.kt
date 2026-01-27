@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import schwarz.jobs.interview.coupon.application.command.ApplyCouponCommand
 import schwarz.jobs.interview.coupon.application.command.CreateCouponCommand
+import schwarz.jobs.interview.coupon.application.port.out.BasketCouponRepository
 import schwarz.jobs.interview.coupon.application.port.out.BasketRepository
 import schwarz.jobs.interview.coupon.application.port.out.CouponRepository
 import schwarz.jobs.interview.coupon.domain.model.Basket
@@ -19,7 +20,8 @@ class CouponServiceTest {
 
     private val couponRepository = mockk<CouponRepository>()
     private val basketRepository = mockk<BasketRepository>()
-    private val couponService = CouponService(couponRepository, basketRepository)
+    private val basketCouponRepository = mockk<BasketCouponRepository>(relaxed = true)
+    private val couponService = CouponService(couponRepository, basketRepository, basketCouponRepository)
 
     @Test
     fun `should get coupon by code`() {
@@ -93,15 +95,14 @@ class CouponServiceTest {
 
         every { basketRepository.findById("1") } returns basket
         every { couponRepository.findByCode("TEST1") } returns coupon
-        every { basketRepository.update(any()) } returns basket
 
         val result = couponService.apply(command)
 
         assertEquals(1, result.appliedCoupons().size)
         assertEquals("TEST1", result.appliedCoupons()[0].code)
-        verify { basketRepository.findById("1") }
+        verify(exactly = 1) { basketRepository.findById("1") }
         verify { couponRepository.findByCode("TEST1") }
-        verify { basketRepository.update(basket) }
+        verify { basketCouponRepository.save("1", "TEST1", BigDecimal("10.00")) }
     }
 
     @Test
@@ -131,6 +132,6 @@ class CouponServiceTest {
         }
 
         assertEquals("Coupon EXPENSIVE cannot be applied to this basket", exception.message)
-        verify(exactly = 0) { basketRepository.update(any()) }
+        verify(exactly = 0) { basketCouponRepository.save(any(), any(), any()) }
     }
 }

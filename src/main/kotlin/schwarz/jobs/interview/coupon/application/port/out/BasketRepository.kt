@@ -5,6 +5,4 @@ import schwarz.jobs.interview.coupon.domain.model.Basket
 interface BasketRepository {
 
     fun findById(id: String): Basket?
-
-    fun update(basket: Basket): Basket
 }

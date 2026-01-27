@@ -29,14 +29,4 @@ class BasketEntity(
         fetch = FetchType.LAZY
     )
     val appliedCoupons: MutableList<BasketCouponEntity> = mutableListOf()
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is BasketEntity) return false
-        return id != null && id == other.id
-    }
-
-    override fun hashCode(): Int = id?.hashCode() ?: 0
-
-    override fun toString(): String = "BasketEntity(id=$id, amount=$amount)"
-}
+)

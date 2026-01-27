@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import schwarz.jobs.interview.coupon.application.command.ApplyCouponCommand
 import schwarz.jobs.interview.coupon.application.command.CreateCouponCommand
 import schwarz.jobs.interview.coupon.application.port.`in`.CouponUseCase
+import schwarz.jobs.interview.coupon.application.port.out.BasketCouponRepository
 import schwarz.jobs.interview.coupon.application.port.out.BasketRepository
 import schwarz.jobs.interview.coupon.application.port.out.CouponRepository
 import schwarz.jobs.interview.coupon.domain.model.Basket
@@ -13,6 +14,7 @@ import schwarz.jobs.interview.coupon.domain.model.Coupon
 class CouponService(
     private val couponRepository: CouponRepository,
     private val basketRepository: BasketRepository,
+    private val basketCouponRepository: BasketCouponRepository,
 ) : CouponUseCase {
 
     override fun get(code: String) = couponRepository.findByCode(code = code) ?: throw NoSuchElementException("Coupon code $code not found")
@@ -35,7 +37,13 @@ class CouponService(
         val coupon = get(code = command.code)
 
         basket.applyDiscount(coupon)
-        basketRepository.update(basket = basket)
+
+        basketCouponRepository.save(
+            basketId = command.basketId,
+            couponCode = command.code,
+            discount = coupon.discount
+        )
+
         return basket
     }
 

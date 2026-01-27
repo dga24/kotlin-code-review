@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import schwarz.jobs.interview.coupon.application.command.ApplyCouponCommand
 import schwarz.jobs.interview.coupon.application.port.`in`.CouponUseCase
-import schwarz.jobs.interview.coupon.domain.model.Basket
 import schwarz.jobs.interview.coupon.infrastructure.web.dto.ApplyCouponRequest
+import schwarz.jobs.interview.coupon.infrastructure.web.dto.BasketResponse
+import schwarz.jobs.interview.coupon.infrastructure.web.mapper.Mapper.toResponse
 
 @RestController
 @RequestMapping("/api/v2/basket")
@@ -22,8 +23,8 @@ class BasketController(
     fun apply(
         @PathVariable basketId: String,
         @RequestBody @Valid request: ApplyCouponRequest,
-    ): ResponseEntity<Basket> = couponUseCase.apply(
+    ): ResponseEntity<BasketResponse> = couponUseCase.apply(
         command =
             ApplyCouponCommand(basketId = basketId , code = request.code)
-    ).run { ResponseEntity.ok(this) }
+    ).toResponse().run { ResponseEntity.ok(this) }
 }

@@ -24,14 +24,4 @@ class CouponEntity(
 
     @Column(name = "min_basket_value", precision = 10, scale = 2, nullable = false)
     val minBasketValue: BigDecimal
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is CouponEntity) return false
-        return id != null && id == other.id
-    }
-
-    override fun hashCode(): Int = id?.hashCode() ?: 0
-
-    override fun toString(): String = "CouponEntity(id=$id, code='$code')"
-}
+)

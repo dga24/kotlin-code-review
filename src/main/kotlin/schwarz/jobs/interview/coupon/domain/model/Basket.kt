@@ -32,6 +32,7 @@ class Basket private constructor(
     }
 
     fun applyDiscount(coupon: Coupon) {
+        require(coupon.code !in appliedCoupons().map { it.code }) { "Coupon ${coupon.code} already applied to this basket" }
         require(coupon.minBasketValue <= priceAfterCoupons()) { "Coupon ${coupon.code} cannot be applied to this basket" }
         appliedCoupons.add(coupon)
     }

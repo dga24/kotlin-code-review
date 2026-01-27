@@ -35,15 +35,5 @@ class BasketCouponEntity(
 
     @Column(name = "discount_applied", precision = 10, scale = 2, nullable = false)
     val discountApplied: BigDecimal
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is BasketCouponEntity) return false
-        return id != null && id == other.id
-    }
-
-    override fun hashCode(): Int = id?.hashCode() ?: 0
-
-    override fun toString(): String = "BasketCouponEntity(id=$id, discountApplied=$discountApplied)"
-}
+)
 

@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import schwarz.jobs.interview.coupon.application.port.out.BasketCouponRepository
 import schwarz.jobs.interview.coupon.application.port.out.BasketRepository
 import schwarz.jobs.interview.coupon.application.port.out.CouponRepository
 import schwarz.jobs.interview.coupon.application.services.CouponService
@@ -15,7 +16,8 @@ class CouponEntityServiceTest {
 
     private val couponRepository = mockk<CouponRepository>()
     private val basketRepository = mockk<BasketRepository>()
-    private val couponService = CouponService(couponRepository, basketRepository)
+    private val basketCouponRepository = mockk<BasketCouponRepository>()
+    private val couponService = CouponService(couponRepository, basketRepository, basketCouponRepository)
 
     @Test
     fun `Should get a coupon`() {
