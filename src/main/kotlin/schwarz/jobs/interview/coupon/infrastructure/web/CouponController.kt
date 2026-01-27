@@ -19,7 +19,7 @@ class CouponController(
     private val couponUseCase: CouponUseCase,
 ) {
 
-    @PostMapping("/create")
+    @PostMapping
     fun create(
         @RequestBody @Valid request: CreateCouponRequest,
     ): ResponseEntity<String> =
