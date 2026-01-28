@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import schwarz.jobs.interview.coupon.application.command.ApplyCouponCommand
 import schwarz.jobs.interview.coupon.application.command.CreateCouponCommand
 import schwarz.jobs.interview.coupon.application.port.out.BasketRepository
 import java.math.BigDecimal
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
 class CouponServiceIntegrationTest {
 
