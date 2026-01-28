@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS coupon;
 
 CREATE TABLE coupon
 (
-    id             INT AUTO_INCREMENT PRIMARY KEY,
+    id             BIGINT AUTO_INCREMENT PRIMARY KEY,
     code           VARCHAR(250)  NOT NULL UNIQUE,
     discount       DECIMAL(10, 2) NOT NULL,
     min_basket_value DECIMAL(10, 2) DEFAULT NULL
@@ -18,7 +18,7 @@ VALUES ('TEST1', 10.00, 50.00),
 
 CREATE TABLE basket
 (
-    id     INT AUTO_INCREMENT PRIMARY KEY,
+    id     BIGINT AUTO_INCREMENT PRIMARY KEY,
     amount DECIMAL(10, 2) DEFAULT 0
 );
 
@@ -30,9 +30,9 @@ VALUES (1, 75.00),
 
 CREATE TABLE basket_coupon
 (
-    id               INT AUTO_INCREMENT PRIMARY KEY,
-    basket_id        INT            NOT NULL,
-    coupon_id        INT            NOT NULL,
+    id               BIGINT AUTO_INCREMENT PRIMARY KEY,
+    basket_id        BIGINT            NOT NULL,
+    coupon_id        BIGINT            NOT NULL,
     discount_applied DECIMAL(10, 2) NOT NULL,
 
     FOREIGN KEY (basket_id) REFERENCES basket (id) ON DELETE CASCADE,

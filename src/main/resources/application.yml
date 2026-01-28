@@ -1,23 +1,23 @@
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT}
 
 spring:
   main:
     web-application-type: servlet
   datasource:
-    url: ${DB_URL:jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
-    driverClassName: ${DB_DRIVER:org.h2.Driver}
-    username: ${DB_USERNAME:sa}
-    password: ${DB_PASSWORD:password}
+    url: ${DB_URL}
+    driverClassName: ${DB_DRIVER}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     database-platform: "org.hibernate.dialect.H2Dialect"
     hibernate:
-      ddl-auto: ${JPA_DDL_AUTO:none}
-    show-sql: ${JPA_SHOW_SQL:false}
+      ddl-auto: ${JPA_DDL_AUTO}
+    show-sql: ${JPA_SHOW_SQL}
   h2:
     console:
-      enabled: ${H2_CONSOLE_ENABLED:true}
-      path: ${H2_CONSOLE_PATH:/h2-console}
+      enabled: ${H2_CONSOLE_ENABLED}
+      path: ${H2_CONSOLE_PATH:}
       settings:
         trace: false
         web-allow-others: false
@@ -29,7 +29,7 @@ spring:
 spring-doc:
   pathsToMatch: /api/**
   show-actuator: true
-  swagger-ui.enabled: ${SWAGGER_ENABLED:true}
+  swagger-ui.enabled: ${SWAGGER_ENABLED}
 
   api-docs:
-    path: ${API_DOCS_PATH:/api-docs}
+    path: ${API_DOCS_PATH}
